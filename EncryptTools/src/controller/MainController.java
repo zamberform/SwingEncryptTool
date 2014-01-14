@@ -1,9 +1,11 @@
 package controller;
 
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -67,18 +69,21 @@ public class MainController {
         }
 	}
 	
-	public void runDESEncrypt(JTextField textField1,JTextField textField2,JTextField textField3)
+	public boolean runDESEncrypt(JTextField textField1,JTextField textField2,JTextField textField3)
 	{
 		System.out.println("Encrypt:" + textField1.getText()+" "+ textField2.getText() + " "+ textField3.getText());
-		JavaDESEncryption encrypt = new JavaDESEncryption();
+		JavaDESEncryption encrypt = new JavaDESEncryption(textField2.getText());
 		encrypt.encryptFile(textField1.getText(), textField3.getText());
+		return true;
 	}
 	
-	public void runDESDecrypt(JTextField textField1,JTextField textField2,JTextField textField3)
+	public boolean runDESDecrypt(JTextField textField1,JTextField textField2,JTextField textField3)
 	{
 		System.out.println("Decrypt:" + textField1.getText()+" "+ textField2.getText() + " "+ textField3.getText());
-		JavaDESEncryption encrypt = new JavaDESEncryption();
-		encrypt.decrytpFile(textField1.getText(), textField3.getText());
+		
+		JavaDESEncryption encrypt = new JavaDESEncryption(textField2.getText());
+		encrypt.decryptFile(textField1.getText(), textField3.getText());
+		return true;
 	}
 	
 	public boolean checkKeyText(JTextField textField)
@@ -109,6 +114,47 @@ public class MainController {
 		if(test!=null&&test.exists())
 		{
 			flag = true;
+		}
+		else
+		{
+			try {
+				if(createFile(test))
+				{
+					JOptionPane.showMessageDialog(null, "make File/Files of Output success");
+					flag = true;
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "make File/Files of Output wrong");
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return flag;
+	}
+	
+	public static boolean createFile(File file) throws IOException {  
+        if(! file.exists()) {  
+            makeDir(file.getParentFile());  
+        }  
+        return file.createNewFile();  
+    }  
+	public static void makeDir(File dir) {  
+        if(! dir.getParentFile().exists()) {  
+            makeDir(dir.getParentFile());  
+        }  
+        dir.mkdir();  
+    }  
+	
+	public boolean checkKeyString(JTextField textField)
+	{
+		boolean flag = true;
+		String test = textField.getText();
+		if(test==null&&"".equals(""))
+		{
+			flag = false;
 		}
 		return flag;
 	}

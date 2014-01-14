@@ -151,9 +151,16 @@ public class MainView extends JFrame implements Observer {
 		sl_desktopPane.putConstraint(SpringLayout.WEST, btnNewButton_1, -180, SpringLayout.EAST, desktopPane);
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(ctrlr.checkInputPath(textField)&&ctrlr.checkOutputpath(textField_3))
+				if(ctrlr.checkInputPath(textField)&&ctrlr.checkOutputpath(textField_3)&&ctrlr.checkKeyString(textField_2))
 				{
-					ctrlr.runDESEncrypt(textField, textField_2, textField_3);
+					if(ctrlr.runDESEncrypt(textField, textField_2, textField_3))
+					{
+						JOptionPane.showMessageDialog(null, "Encrypt Complete");
+					}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "I am Sorry,there are some wrong with Input");
 				}
 			}
 		});
@@ -167,12 +174,20 @@ public class MainView extends JFrame implements Observer {
 		sl_desktopPane.putConstraint(SpringLayout.EAST, btnNewButton_3, -28, SpringLayout.WEST, btnNewButton_1);
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(ctrlr.checkInputPath(textField)&&ctrlr.checkOutputpath(textField_3))
+				if(ctrlr.checkInputPath(textField)&&ctrlr.checkOutputpath(textField_3)&&ctrlr.checkKeyString(textField_2))
 				{
-					ctrlr.runDESDecrypt(textField, textField_2, textField_3);
+					if(ctrlr.runDESDecrypt(textField, textField_2, textField_3))
+					{
+						JOptionPane.showMessageDialog(null, "Decrypt Complete");
+					}
+				}
+				else
+				{
+					JOptionPane.showMessageDialog(null, "I am Sorry,there are some wrong with Input");
 				}
 			}
 		});
+		
 		sl_desktopPane.putConstraint(SpringLayout.WEST, btnNewButton_3, -157, SpringLayout.WEST, btnNewButton_1);
 		sl_desktopPane.putConstraint(SpringLayout.SOUTH, btnNewButton_3, 0, SpringLayout.SOUTH, btnNewButton_1);
 		desktopPane.add(btnNewButton_3);
@@ -186,12 +201,9 @@ public class MainView extends JFrame implements Observer {
 		JPanel panel = new JPanel();
 		main.add(panel);
 		
-		JProgressBar progressBar = new JProgressBar();
-		progressBar.setValue(50);
-		panel.add(progressBar);
 		((JPanel) main.getComponent(1)).setLayout(new FlowLayout());
 		((FlowLayout) ((JPanel) main.getComponent(1)).getLayout()).setAlignment(FlowLayout.RIGHT);
-		((JPanel) main.getComponent(1)).add(new JLabel("Status"));
+		((JPanel) main.getComponent(1)).add(new JLabel("CopyRight @zamberform"));
 		return main;
 	}
 	

@@ -19,6 +19,7 @@ import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
+import javax.swing.JOptionPane;
 
 public class JavaDESEncryption {
 
@@ -29,11 +30,11 @@ public class JavaDESEncryption {
 	private static final byte[] initialization_vector = { (byte) 0x8E, 0x12,
 			0x39, (byte) 0x9C, 0x07, 0x72, 0x6F, 0x5A };
 
-	public JavaDESEncryption() {
+	public JavaDESEncryption(String keyStr) {
 
 		try {
 			KeyGenerator secret_key = KeyGenerator.getInstance("DES");
-			secret_key.init(new SecureRandom("12345678".getBytes()));
+			secret_key.init(new SecureRandom(keyStr.getBytes()));
 			
 			key = secret_key.generateKey();
 			secret_key = null;
@@ -58,16 +59,18 @@ public class JavaDESEncryption {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "I am Sorry,there are some wrong with EncryptFile");
 		}
 	}
 
-	public void decrytpFile(String encryptedFile, String decryptedFile) {
+	public void decryptFile(String encryptedFile, String decryptedFile) {
 		try {
 			decrypt(new FileInputStream(encryptedFile), new FileOutputStream(
 					decryptedFile));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, "I am Sorry,there are some wrong with DecryptFile");
 		}
 	}
 
