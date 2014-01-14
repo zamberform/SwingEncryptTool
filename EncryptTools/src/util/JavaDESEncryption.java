@@ -29,10 +29,6 @@ public class JavaDESEncryption {
 
 	public JavaDESEncryption() {
 
-		String clearFile = "C:/Users/nikos7/Desktop/input.txt";
-		String encryptedFile = "C:/Users/nikos7/Desktop/encrypted.txt";
-		String decryptedFile = "C:/Users/nikos7/Desktop/decrypted.txt";
-
 		try {
 			SecretKey secret_key = KeyGenerator.getInstance("DES")
 					.generateKey();
