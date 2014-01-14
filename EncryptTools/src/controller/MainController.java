@@ -14,6 +14,7 @@ public class MainController {
 
 	private MainModel model;
 
+	
 	public MainController(MainModel model) {
 		this.model = model;
 		this.model.action();
@@ -69,18 +70,14 @@ public class MainController {
 	public void runDESEncrypt(JTextField textField1,JTextField textField2,JTextField textField3)
 	{
 		System.out.println("Encrypt:" + textField1.getText()+" "+ textField2.getText() + " "+ textField3.getText());
-		
 		JavaDESEncryption encrypt = new JavaDESEncryption();
-		
 		encrypt.encryptFile(textField1.getText(), textField3.getText());
 	}
 	
 	public void runDESDecrypt(JTextField textField1,JTextField textField2,JTextField textField3)
 	{
 		System.out.println("Decrypt:" + textField1.getText()+" "+ textField2.getText() + " "+ textField3.getText());
-		
 		JavaDESEncryption encrypt = new JavaDESEncryption();
-		
 		encrypt.decrytpFile(textField1.getText(), textField3.getText());
 	}
 	

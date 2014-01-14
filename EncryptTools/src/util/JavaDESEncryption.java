@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
+import java.security.Key;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 import javax.crypto.Cipher;
@@ -16,7 +18,6 @@ import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 
 public class JavaDESEncryption {
@@ -24,20 +25,24 @@ public class JavaDESEncryption {
 	private static Cipher encrypt;
 	private static Cipher decrypt;
 
-	private static final byte[] initialization_vector = { 22, 33, 11, 44, 55,
-			99, 66, 77 };
+	private static Key key;
+	private static final byte[] initialization_vector = { (byte) 0x8E, 0x12,
+			0x39, (byte) 0x9C, 0x07, 0x72, 0x6F, 0x5A };
 
 	public JavaDESEncryption() {
 
 		try {
-			SecretKey secret_key = KeyGenerator.getInstance("DES")
-					.generateKey();
+			KeyGenerator secret_key = KeyGenerator.getInstance("DES");
+			secret_key.init(new SecureRandom("12345678".getBytes()));
+			
+			key = secret_key.generateKey();
+			secret_key = null;
 			AlgorithmParameterSpec alogrithm_specs = new IvParameterSpec(
 					initialization_vector);
 			encrypt = Cipher.getInstance("DES/CBC/PKCS5Padding");
-			encrypt.init(Cipher.ENCRYPT_MODE, secret_key, alogrithm_specs);
+			encrypt.init(Cipher.ENCRYPT_MODE, key, alogrithm_specs);
 			decrypt = Cipher.getInstance("DES/CBC/PKCS5Padding");
-			decrypt.init(Cipher.DECRYPT_MODE, secret_key, alogrithm_specs);
+			decrypt.init(Cipher.DECRYPT_MODE, key, alogrithm_specs);
 		} catch (InvalidKeyException | InvalidAlgorithmParameterException
 				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
@@ -50,10 +55,7 @@ public class JavaDESEncryption {
 		try {
 			encrypt(new FileInputStream(clearFile), new FileOutputStream(
 					encryptedFile));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -63,73 +65,37 @@ public class JavaDESEncryption {
 		try {
 			decrypt(new FileInputStream(encryptedFile), new FileOutputStream(
 					decryptedFile));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
 	private static void encrypt(InputStream input, OutputStream output)
-			throws IOException {
-
-		try {
-			    byte[] buf = new byte[1024];
-			// bytes at this stream are first encoded
-			    output = new CipherOutputStream(output, encrypt);
-			 
-			// read in the clear text and write to out to encrypt
-			int numRead = 0;
-			 
-			while ((numRead = input.read(buf)) >= 0) {
-			 
-				output.write(buf, 0, numRead);
-			 
-			}
-			 
-			 
-			output.close();
-			 
-			  }
-			  catch (IOException e) {
-			    System.out.println("I/O Error:" + e.getMessage());
-			 
-			  }
+			throws Exception {
+	    CipherInputStream cis = new CipherInputStream(input, encrypt);
+	    byte[] buffer = new byte[1024];
+	    int r;
+	    while ((r = cis.read(buffer)) > 0) {
+	    	output.write(buffer, 0, r);
+	    }
+	    cis.close();
+	    input.close();
+	    output.close();
 
 	}
 
 	private static void decrypt(InputStream input, OutputStream output)
-			throws IOException {
-
-		try {
-			    byte[] buf = new byte[1024];
-			// bytes read from stream will be decrypted
-			    CipherInputStream cis = new CipherInputStream(input, encrypt);
-			 
-			// read in the decrypted bytes and write the clear text to out
-			 
-			int numRead = 0;
-			 
-			while ((numRead = cis.read(buf)) >= 0) {
-				output.write(buf, 0, numRead);
-			 
-			}
-			 
-			// close all streams
-			 
-			cis.close();
-			 
-			input.close();
-			output.close();
-			 
-			  }
-			  catch (IOException e) {
-			    System.out.println("I/O Error:" + e.getMessage());
-			 
-			  }
-
+			throws Exception {
+	    CipherOutputStream cos = new CipherOutputStream(output, decrypt);
+	    byte[] buffer = new byte[1024];
+	    int r;
+	    while ((r = input.read(buffer)) >= 0) {
+	        cos.write(buffer, 0, r);
+	    }
+	    cos.close();
+	    output.close();
+	    input.close();
 	}
 
 }
