@@ -29,7 +29,6 @@ import controller.MainController;
 
 import javax.swing.SpringLayout;
 import javax.swing.JTextField;
-import javax.swing.JProgressBar;
 
 @SuppressWarnings("serial")
 public class MainView extends JFrame implements Observer {
